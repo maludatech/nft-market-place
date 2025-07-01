@@ -42,13 +42,13 @@ contract NFTMarketPlace is ERC721URIStorage {
     }
 
     constructor() ERC721("NFT Metaverse Token", "NMT") {
-        owner == payable(msg.sender);
+        owner = payable(msg.sender);
     }
 
     function updateListingPrice(
         uint256 _listingPrice
     ) public payable onlyOwner {
-        _listingPrice = listingPrice;
+        listingPrice = _listingPrice;
     }
 
     function getListingPrice() public view returns (uint256) {
@@ -95,5 +95,28 @@ contract NFTMarketPlace is ERC721URIStorage {
             price,
             false
         );
+    }
+
+    //function for re-sale token
+    function resaleToken(uint256 tokenId, uint256 price) public payable {
+        require(
+            idMarketItem[tokenId].owner == msg.sender,
+            "Only item owner can perform this operation"
+        );
+        require(
+            msg.value == listingPrice,
+            "Price must be equal to listing price"
+        );
+
+        idMarketItem[tokenId].price = price;
+        idMarketItem[tokenId].sold = false;
+        idMarketItem[tokenId].seller = payable(msg.sender);
+        idMarketItem[tokenId].owner = payable(address(this));
+
+        if (_itemsSold > 0) {
+            _itemsSold -= 1;
+        }
+
+        _transfer(msg.sender, address(this), tokenId);
     }
 }

@@ -33,8 +33,11 @@ contract NFTMarketPlace is ERC721URIStorage {
         bool sold
     );
 
-    modifier onlyOwner(){
-        require(msg.sender == owner, "only owner of the marketplace can change the listing price");
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            "only owner of the marketplace can change the listing price"
+        );
         _;
     }
 
@@ -42,20 +45,45 @@ contract NFTMarketPlace is ERC721URIStorage {
         owner == payable(msg.sender);
     }
 
-    function updateListingPrice(uint256 _listingPrice) public payable onlyOwner{
+    function updateListingPrice(
+        uint256 _listingPrice
+    ) public payable onlyOwner {
         _listingPrice = listingPrice;
     }
 
-    function getListingPrice() public view returns(uint256){
+    function getListingPrice() public view returns (uint256) {
         return listingPrice;
     }
 
     //Create NFT token function
-    function createToken(string memory tokenURI, uint256 price) public payable returns(uint256){
+    function createToken(
+        string memory tokenURI,
+        uint256 price
+    ) public payable returns (uint256) {
         _tokenIds += 1;
         uint256 newTokenId = _tokenIds;
         _safeMint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, tokenURI);
+
+        createMarketItem(newTokenId, price);
+
+        return newTokenId;
     }
-    
-    
+
+    //Create Market Item function
+    function createMarketItem(uint256 tokenId, uint256 price) private {
+        require(price > 0, "Price must be greater than 0");
+        require(
+            msg.value == listingPrice,
+            "Price must be equal to listing price"
+        );
+
+        idMarketItem[tokenId] = MarketItem({
+            tokenId: tokenId,
+            seller: payable(msg.sender),
+            owner: payable(owner),
+            price: price,
+            sold: false
+        });
+    }
 }

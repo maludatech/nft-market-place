@@ -11,6 +11,7 @@ import {
 contract NFTMarketPlace is ERC721URIStorage {
     uint256 private _tokenIds;
     uint256 private _itemsSold;
+    uint256 public listingPrice = 0.0025 ether;
 
     address payable owner;
 
@@ -41,8 +42,20 @@ contract NFTMarketPlace is ERC721URIStorage {
         owner == payable(msg.sender);
     }
 
-    function updateListingPrice(uint256 _listingPrice) public payable{
-        
+    function updateListingPrice(uint256 _listingPrice) public payable onlyOwner{
+        _listingPrice = listingPrice;
     }
+
+    function getListingPrice() public view returns(uint256){
+        return listingPrice;
+    }
+
+    //Create NFT token function
+    function createToken(string memory tokenURI, uint256 price) public payable returns(uint256){
+        _tokenIds += 1;
+        uint256 newTokenId = _tokenIds;
+        _safeMint(msg.sender, newTokenId);
+    }
+    
     
 }

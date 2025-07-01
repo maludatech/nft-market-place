@@ -85,5 +85,15 @@ contract NFTMarketPlace is ERC721URIStorage {
             price: price,
             sold: false
         });
+
+        _transfer(msg.sender, address(this), tokenId);
+
+        emit idMarketItemCreated(
+            tokenId,
+            msg.sender,
+            address(this),
+            price,
+            false
+        );
     }
 }

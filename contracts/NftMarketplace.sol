@@ -197,20 +197,20 @@ contract NFTMarketPlace is ERC721URIStorage {
     }
 
     //function to fetch items created by users
-    function fetchItemsListed() public view returns(MarketItem[]memory){
-         uint256 totalCount = _tokenIds;
+    function fetchItemsListed() public view returns (MarketItem[] memory) {
+        uint256 totalCount = _tokenIds;
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
 
-        for(uint256 i = 1; i <= totalCount; i++){
-            if(idMarketItem[i].seller == msg.sender){
+        for (uint256 i = 1; i <= totalCount; i++) {
+            if (idMarketItem[i].seller == msg.sender) {
                 itemCount++;
             }
         }
 
         MarketItem[] memory items = new MarketItem[](itemCount);
-        for(uint256 i = 1; i <= totalCount; i++){
-            if(idMarketItem[i].seller == msg.sender){
+        for (uint256 i = 1; i <= totalCount; i++) {
+            if (idMarketItem[i].seller == msg.sender) {
                 items[currentIndex] = MarketItem({
                     tokenId: idMarketItem[i].tokenId,
                     seller: idMarketItem[i].seller,

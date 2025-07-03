@@ -55,7 +55,7 @@ contract NFTMarketPlace is ERC721URIStorage {
         return listingPrice;
     }
 
-    //create NFT token function
+    //function to create NFT token
     function createToken(
         string memory tokenURI,
         uint256 price
@@ -70,7 +70,7 @@ contract NFTMarketPlace is ERC721URIStorage {
         return newTokenId;
     }
 
-    //create Market Item function
+    //function to create market item
     function createMarketItem(uint256 tokenId, uint256 price) private {
         require(price > 0, "Price must be greater than 0");
         require(
